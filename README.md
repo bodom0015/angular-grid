@@ -7,7 +7,7 @@ This is a primitive grid service for AngularJS with basic logic for filtering, s
 ## Motivation
 Tables are a common occurence in management dashboard UIs, so I have had to create quite a few of these in the past. Many grids already exist for AngularJS, and I decided to try and make one myself as an exercise.
 
-Currently it needs many bindings to get it working to the point that the demo works, but I am working toward making that a directive soon, which should alleviate much of the custom binding and events.
+Unfortunately, it takes a lot of bindings to get it working to the point that the demo works. I am working toward simplifying the markup by making a grid directive to wrap around the service soon, which should alleviate much of the custom binding and events.
 
 ## Installation
 Bower integration possibly in the future.
