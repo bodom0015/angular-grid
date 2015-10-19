@@ -1,0 +1,155 @@
+<!doctype html>
+<html ng-app="gridTest">
+  <head>
+    <title>ngGrid Demo Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="angular-grid.js"></script>
+    <script>
+      angular
+      .module('gridTest', [ 'ngGrid' ])
+      .controller('GridController', [ '$scope', '$filter', 'Grid', function($scope, $filter, Grid) {
+        $scope.data = [
+            { id: 2, name: 'Alice', number:1234 },
+            { id: 1, name: 'Brian', number:2345 },
+            { id: 4, name: 'Craig', number:3456 },
+            { id: 3, name: 'Dana', number:4567 },
+            { id: 6, name: 'Ellen', number:5678 },
+            { id: 5, name: 'Frank', number:6789 },
+            { id: 8, name: 'Greta', number:7890 },
+            { id: 7, name: 'Henry', number:8901 },
+            { id: 10, name: 'Ixtchel', number:9012 },
+            { id: 9, name: 'Jesus', number:0123 },
+            { id: 12, name: 'Karl', number:0000 },
+            { id: 11, name: 'Laura', number:1111 },
+            { id: 14, name: 'Mike', number:2222 },
+            { id: 13, name: 'Nora', number:3333 },
+            { id: 16, name: 'Othello', number:4444 },
+            { id: 15, name: 'Persephone', number:5555 },
+            { id: 18, name: 'Quartz', number:6666 },
+            { id: 17, name: 'Ryan', number:7777 },
+            { id: 20, name: 'Serpentine', number:8888 },
+            { id: 19, name: 'Toronto', number:9999 },
+            { id: 22, name: 'Uranium', number:1010 },
+            { id: 21, name: 'Volt', number:1212 },
+            { id: 24, name: 'Warhead', number:1313 },
+            { id: 23, name: 'Xylophone', number:1414 },
+            { id: 26, name: 'Yalda', number:1515 },
+            { id: 25, name: 'Zlotnicki', number:1616 },
+          ];
+          
+        $scope.grid = new Grid([5,10,15,20], function() { return $scope.data });
+        
+        // TODO: These need to be done for every grid. Need to research the
+        // angular way to $scope.$watch from inside of the service
+        $scope.$watch('grid.query', function() { $scope.grid.pager.pageSizeChanged(); });
+        $scope.$watch('grid.pager.pageSize', function() { $scope.grid.pager.pageSizeChanged(); });
+        $scope.$watch('grid.query', function() { $scope.grid.selector.selection = []; });
+      }]);
+    </script>
+    <style>
+      tr {
+        cursor:pointer;
+      }
+      input[type="checkbox"] {
+        cursor:pointer;
+      }
+      table {
+        min-height:50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div ng-view ng-controller="GridController" class="container">
+    	<div class="row">
+        <div class="col-md-12">
+          <h1>ngGrid Demo Page</h1>
+          <p>This is a custom angular grid service that I am working on which can handle sorting, paging, and selection.</p>
+          <p>I am working toward making this less binding-heavy, so it will hopefully moving in the direction of a directive soon.</p>
+        </div>
+      </div>
+    	<div class="row">
+        <div class="col-md-8">
+          <form>
+            <!-- Search Filter and Pager -->
+            <div class="input-group input-group">
+              <!-- Search Filter and parameters -->
+              <span class="input-group-addon"><i class="fa fa-search"></i></span>
+              <span class="input-group-addon cursor-ptr checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="grid.exact" /> {{ grid.exact ? 'Ab' : 'ab' }}
+                  </label>
+              </span>
+              <input class="form-control" type="text" ng-model="grid.query" placeholder="Filter by name..." aria-label="Filter by name..."/>
+
+              <!-- Count of filtered / pagered content -->
+              <span class="input-group-addon">Count: {{ grid.data(grid.query).length  }}&nbsp;&nbsp;<span ng-show="grid.pager.numberOfPages > 1">({{ grid.pager.pageNum + 1 }} / {{ grid.pager.numberOfPages }})</span></span>
+              
+              <!-- Table Pager -->
+              <span class="input-group-btn" ng-show="grid.pager.numberOfPages > 1">
+                  <!-- Jump to first page -->
+                  <button class="btn btn-primary" ng-disabled="grid.pager.disableFirstPage()" ng-click="grid.pager.firstPage()">&laquo;</button>
+                  
+                  <!-- Previous Page -->
+                  <button class="btn btn-primary" ng-disabled="grid.pager.disablePrevPage()" ng-click="grid.pager.prevPage()">&lt;</button>
+                  
+                  <!-- Display our current page +/- 2 -->
+                  <button ng-disabled="!grid.pager.isValidPage(page) || grid.pager.isCurrentPage(page)" ng-repeat="page in grid.pager.getPageRange(grid.pager.pageNum)"
+                  class="btn" ng-class="{ 'btn-primary':grid.pager.isCurrentPage(page), 'btn-link':!grid.pager.isCurrentPage(page) }" ng-click="grid.pager.pageNum = page">{{ grid.pager.isValidPage(page) ? page + 1 : ' ' }}</button>
+                   
+                  <!-- Next Page -->
+                  <button class="btn btn-primary" ng-disabled="grid.pager.disableNextPage()" ng-click="grid.pager.nextPage()">&gt;</button>
+                  
+                  <!-- Jump to last page -->
+                  <button class="btn btn-primary" ng-disabled="grid.pager.disableLastPage()" ng-click="grid.pager.lastPage()">&raquo;</button>
+              </span>
+              
+              <!-- Page Size -->
+              <span class="input-group-btn">
+                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                     <i class="fa fa-book"></i>&nbsp;&nbsp;{{ grid.pager.pageSize }}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
+                 </button>
+                   
+                 <!-- Select Page Size -->
+                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                     <li ng-repeat="size in grid.pager.pageSizes"><a href="#" ng-click="grid.pager.pageSize = size">{{ size }}</a></li>
+                 </ul>
+              </span>
+            </div><!-- /input-group -->
+          </form>
+          <h4 ng-if="grid.data(grid.query).length === 0">No items matched your query.</h4>
+          <table class="table table-striped table-condensed table-hover" ng-if="grid.data(grid.query).length > 0">
+            <thead>
+              <tr>
+                <td style="width:5%" ng-click="grid.selector.select.all('name')"><input type="checkbox" ng-checked="grid.selector.selection.length === grid.data(grid.query).length"/></td>
+                <th style="width:20%" ng-click="grid.sort.sortBy('id')">
+                  ID&nbsp;&nbsp;<i class="fa" ng-show="grid.sort.orderByFieldName === 'id'" ng-class="{ 'fa-sort-numeric-asc': !grid.sort.reverse, 'fa-sort-numeric-desc':  grid.sort.reverse }"></i>
+                </th>
+                <th style="width:50%" ng-click="grid.sort.sortBy('name')">
+                  Name&nbsp;&nbsp;<i class="fa" ng-show="grid.sort.orderByFieldName === 'name'" ng-class="{ 'fa-sort-alpha-asc': !grid.sort.reverse, 'fa-sort-alpha-desc': grid.sort.reverse }"></i>
+                </th>
+                <th style="width:25%" ng-click="grid.sort.sortBy('number')">
+                  Number&nbsp;&nbsp;<i class="fa" ng-show="grid.sort.orderByFieldName === 'number'" ng-class="{ 'fa-sort-asc': !grid.sort.reverse, 'fa-sort-desc': grid.sort.reverse }"></i>
+                </th>
+              <tr>
+             </thead>
+             <tbody>
+              <tr ng-click="grid.selector.select.toggle(item.name)" ng-repeat="item in grid.data(grid.query) | orderBy:grid.sort.orderByFieldName:grid.sort.reverse | limitTo:grid.pager.pageSize:(grid.pager.pageNum * grid.pager.pageSize)">
+                <td><input type="checkbox" ng-checked="grid.selector.selection.indexOf(item.name) !== -1" /></td>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.number }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div><!-- /.col-md-8 -->
+        <div class="col-md-4">
+          <label>Under the Hood:</label> <pre>{{ grid | json }}</pre>
+        </div><!-- /.col-md-4 -->
+      </div>
+    </div>
+  </body>
+</html>
