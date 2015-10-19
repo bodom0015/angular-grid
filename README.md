@@ -11,6 +11,8 @@ Unfortunately, it takes a lot of bindings to get it working to the point that th
 
 I will also work toward creating add / remove / edit / save / cancel logic for the grid as well, so you may need to handle that logic yourself in the controller.
 
+NOTE: Bootstrap is not necessary to use this wizard, I have simply used it below in the example to display the wizard.
+
 ## Installation
 Bower integration possibly in the future.
 
@@ -25,6 +27,8 @@ To use the module, add a reference to the javascript to your `index.html`:
 ```html
 <script src="angular-grid/angular-grid.js"></script>
 ```
+    
+## Usage
     
 Add the `ngGrid` module to your module's instantiation and pass the Grid service into your Controller:
 ```js
@@ -68,7 +72,7 @@ angular
 
 You should then be able to bind to this grid in the view template:
 ```html
-<div ng-controller="GridController">
+<div ng-controller="GridController" class="container">
   <table class="table table-striped table-condensed table-hover" ng-if="grid.data(grid.query).length > 0">
     <thead>
       <tr>
