@@ -11,7 +11,7 @@
     <script>
       angular
       .module('gridTest', [ 'ngGrid' ])
-      .controller('GridController', [ '$scope', '$filter', 'Grid', function($scope, $filter, Grid) {
+      .controller('GridController', [ '$scope', 'Grid', function($scope, Grid) {
         $scope.data = [
             { id: 2, name: 'Alice', number:1234 },
             { id: 1, name: 'Brian', number:2345 },
@@ -51,10 +51,7 @@
       }]);
     </script>
     <style>
-      tr {
-        cursor:pointer;
-      }
-      input[type="checkbox"] {
+      tr, input[type="checkbox"] {
         cursor:pointer;
       }
       table {

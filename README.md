@@ -29,7 +29,6 @@ Add the `ngGrid` module to your module's instantiation and pass the Grid service
 angular
 .module('gridTest', [ 'ngGrid' ])
 .controller('GridController', [ '$scope', 'Grid', function($scope, Grid) {
-  // Creates a new instance of the alert service
   var arrayOfPageSizes = [ 5, 10, 15, 20 ];
   $scope.data = [
     { id: 2, name: 'Alice', number:1234 },
