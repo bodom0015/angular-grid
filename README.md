@@ -9,6 +9,8 @@ Tables are a common occurence in management dashboard UIs, so I have had to crea
 
 Unfortunately, it takes a lot of bindings to get it working to the point that the demo works. I am working toward simplifying the markup by making a grid directive to wrap around the service soon, which should alleviate much of the custom binding and events.
 
+I will also work toward creating add / remove / edit / save / cancel logic for the grid as well, so you may need to handle that logic yourself in the controller.
+
 ## Installation
 Bower integration possibly in the future.
 
