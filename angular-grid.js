@@ -48,7 +48,6 @@ angular
                 } else {
                     selector.selection = id;
                 }
-                console.log("Selection: " + selector.selection);
             },
             toggle: function(id) {
                 var index = selector.selection.indexOf(id);
@@ -57,13 +56,11 @@ angular
                 } else if (index > -1) {
                     selector.selection.splice(index, 1);
                 }
-                console.log("Selection: " + selector.selection);
             },
             all: function(fieldName) {
                 if (selector.selection.length === grid.data(grid.query).length) {
                     // De-select all
                     selector.selection = [];
-                    console.log("De-selected all locations");
                 } else {
                     // Select all
                     angular.forEach(grid.data(grid.query), function(value) {
@@ -71,7 +68,6 @@ angular
                             selector.selection.push(value[fieldName]);
                         }
                     });
-                    console.log("Selected all locations: " + selector.selection);
                 }
             }
         };
