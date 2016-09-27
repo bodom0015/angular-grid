@@ -11,44 +11,60 @@
     <script>
       angular
       .module('gridTest', [ 'ngGrid' ])
-      .controller('GridController', [ '$scope', 'Grid', function($scope, Grid) {
-        $scope.data = [
-            { id: 2, name: 'Alice', number:1234 },
-            { id: 1, name: 'Brian', number:2345 },
-            { id: 4, name: 'Craig', number:3456 },
-            { id: 3, name: 'Dana', number:4567 },
-            { id: 6, name: 'Ellen', number:5678 },
-            { id: 5, name: 'Frank', number:6789 },
-            { id: 8, name: 'Greta', number:7890 },
-            { id: 7, name: 'Henry', number:8901 },
-            { id: 10, name: 'Ixtchel', number:9012 },
-            { id: 9, name: 'Jesus', number:0123 },
-            { id: 12, name: 'Karl', number:0000 },
-            { id: 11, name: 'Laura', number:1111 },
-            { id: 14, name: 'Mike', number:2222 },
-            { id: 13, name: 'Nora', number:3333 },
-            { id: 16, name: 'Othello', number:4444 },
-            { id: 15, name: 'Persephone', number:5555 },
-            { id: 18, name: 'Quartz', number:6666 },
-            { id: 17, name: 'Ryan', number:7777 },
-            { id: 20, name: 'Serpentine', number:8888 },
-            { id: 19, name: 'Toronto', number:9999 },
-            { id: 22, name: 'Uranium', number:1010 },
-            { id: 21, name: 'Volt', number:1212 },
-            { id: 24, name: 'Warhead', number:1313 },
-            { id: 23, name: 'Xylophone', number:1414 },
-            { id: 26, name: 'Yalda', number:1515 },
-            { id: 25, name: 'Zlotnicki', number:1616 },
-          ];
-          
-        $scope.grid = new Grid([5,10,15,20], function() { return $scope.data });
+      
+      // Live data source (add more as needed)
+      .constant('DataSource', 'https://jsonplaceholder.typicode.com/posts')
+      
+      // The JavaScript controlling this view
+      .controller('GridController', [ '$scope', '$http', 'Grid', 'DataSource', function($scope, $http, Grid, DataSource) {
+        $http.get(DataSource).then(function(data) {
+          console.log('Data received: ', data);
+          $scope.data = data.data;
+        }, function(response) {
+          console.log('Error: ', response);
+        });
+        
+        $scope.grid = new Grid(30, function() { return $scope.data });
+        
+        // The columns (as field names) to display on the table
+        $scope.gridCols = [ 'id', 'userId', 'title', 'body' ];
         
         // TODO: These need to be done for every grid. Need to research the
         // angular way to $scope.$watch from inside of the service
         $scope.$watch('grid.query', function() { $scope.grid.pager.pageSizeChanged(); });
         $scope.$watch('grid.pager.pageSize', function() { $scope.grid.pager.pageSizeChanged(); });
         $scope.$watch('grid.query', function() { $scope.grid.selector.selection = []; });
-      }]);
+      }])
+      
+      // Static data for testing
+      .value('TestData', [
+        { id: 2, name: 'Alice', number:1234 },
+        { id: 1, name: 'Brian', number:2345 },
+        { id: 4, name: 'Craig', number:3456 },
+        { id: 3, name: 'Dana', number:4567 },
+        { id: 6, name: 'Ellen', number:5678 },
+        { id: 5, name: 'Frank', number:6789 },
+        { id: 8, name: 'Greta', number:7890 },
+        { id: 7, name: 'Henry', number:8901 },
+        { id: 10, name: 'Ixtchel', number:9012 },
+        { id: 9, name: 'Jesus', number:0123 },
+        { id: 12, name: 'Karl', number:0000 },
+        { id: 11, name: 'Laura', number:1111 },
+        { id: 14, name: 'Mike', number:2222 },
+        { id: 13, name: 'Nora', number:3333 },
+        { id: 16, name: 'Othello', number:4444 },
+        { id: 15, name: 'Persephone', number:5555 },
+        { id: 18, name: 'Quartz', number:6666 },
+        { id: 17, name: 'Ryan', number:7777 },
+        { id: 20, name: 'Serpentine', number:8888 },
+        { id: 19, name: 'Toronto', number:9999 },
+        { id: 22, name: 'Uranium', number:1010 },
+        { id: 21, name: 'Volt', number:1212 },
+        { id: 24, name: 'Warhead', number:1313 },
+        { id: 23, name: 'Xylophone', number:1414 },
+        { id: 26, name: 'Yalda', number:1515 },
+        { id: 25, name: 'Zlotnicki', number:1616 },
+      ]);
     </script>
     <style>
       tr, input[type="checkbox"] {
@@ -69,7 +85,7 @@
         </div>
       </div>
     	<div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
           <form>
             <!-- Search Filter and Pager -->
             <div class="input-group input-group">
@@ -118,35 +134,37 @@
             </div><!-- /input-group -->
           </form>
           <h4 ng-if="grid.data(grid.query).length === 0">No items matched your query.</h4>
-          <table class="table table-striped table-condensed table-hover" ng-if="grid.data(grid.query).length > 0">
+          <table class="table table-striped table-condensed table-hover">
             <thead>
               <tr>
-                <td style="width:5%" ng-click="grid.selector.select.all('name')"><input type="checkbox" ng-checked="grid.selector.selection.length === grid.data(grid.query).length"/></td>
-                <th style="width:20%" ng-click="grid.sort.sortBy('id')">
-                  ID&nbsp;&nbsp;<i class="fa" ng-show="grid.sort.orderByFieldName === 'id'" ng-class="{ 'fa-sort-numeric-asc': !grid.sort.reverse, 'fa-sort-numeric-desc':  grid.sort.reverse }"></i>
-                </th>
-                <th style="width:50%" ng-click="grid.sort.sortBy('name')">
-                  Name&nbsp;&nbsp;<i class="fa" ng-show="grid.sort.orderByFieldName === 'name'" ng-class="{ 'fa-sort-alpha-asc': !grid.sort.reverse, 'fa-sort-alpha-desc': grid.sort.reverse }"></i>
-                </th>
-                <th style="width:25%" ng-click="grid.sort.sortBy('number')">
-                  Number&nbsp;&nbsp;<i class="fa" ng-show="grid.sort.orderByFieldName === 'number'" ng-class="{ 'fa-sort-asc': !grid.sort.reverse, 'fa-sort-desc': grid.sort.reverse }"></i>
+                <td style="width:5%" ng-click="grid.selector.select.all('id')"><input type="checkbox" ng-checked="grid.selector.selection.length === grid.data(grid.query).length"/></td>
+                <th style="width:20%" ng-click="grid.sort.sortBy(colname)" ng-repeat="colname in gridCols">
+                  {{ colname | uppercase }} <i class="fa fa-fw" ng-show="grid.sort.orderByFieldName === colname" ng-class="{ 'fa-sort-asc': !grid.sort.reverse, 'fa-sort-desc':  grid.sort.reverse }"></i>
                 </th>
               <tr>
              </thead>
              <tbody>
-              <tr ng-click="grid.selector.select.toggle(item.name)" ng-repeat="item in grid.data(grid.query) | orderBy:grid.sort.orderByFieldName:grid.sort.reverse | limitTo:grid.pager.pageSize:(grid.pager.pageNum * grid.pager.pageSize)">
-                <td><input type="checkbox" ng-checked="grid.selector.selection.indexOf(item.name) !== -1" /></td>
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.number }}</td>
+              <tr ng-click="grid.selector.select.toggle(item.id)" ng-repeat="item in grid.data(grid.query) | orderBy:grid.sort.orderByFieldName:grid.sort.reverse | limitTo:grid.pager.pageSize:(grid.pager.pageNum * grid.pager.pageSize)">
+                <td><input type="checkbox" ng-checked="grid.selector.selection.indexOf(item.id) !== -1" /></td>
+                <td ng-repeat="colname in gridCols">{{ item[colname] }}</td>
               </tr>
             </tbody>
           </table>
         </div><!-- /.col-md-8 -->
-        <div class="col-md-4">
-          <label>Under the Hood:</label> <pre>{{ grid | json }}</pre>
-        </div><!-- /.col-md-4 -->
       </div>
+      
+      
+      <div class="row">
+        <div class="col-sm-6">
+          <label>Under the Hood:</label>
+          <pre>{{ grid | json }}</pre>
+        </div><!-- /.col-sm-6 -->
+        
+        <div class="col-sm-6">
+          <label>Underlying Dataset:</label>
+          <pre>{{ data | json }}</pre>
+        </div><!-- /.col-sm-6 -->
+      </div><!-- /.row -->
     </div>
   </body>
 </html>

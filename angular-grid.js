@@ -120,27 +120,31 @@ angular
             pager.pageNum = 0;
         };
         pager.disableFirstPage = function() {
-            return pager.disablePrevPage();
+            return !grid.data()  || pager.disablePrevPage();
         };
         pager.prevPage = function() {
             pager.pageNum = pager.pageNum - 1;
         };
         pager.disablePrevPage = function() {
-            return pager.pageNum === 0;
+            return !grid.data()  || (pager.pageNum === 0);
         };
         pager.nextPage = function() {
             pager.pageNum = pager.pageNum + 1;
         };
         pager.disableNextPage = function() {
-            return (pager.pageNum + 1) * pager.pageSize >= grid.data(grid.query).length;
+            return !grid.data()  || ((pager.pageNum + 1) * pager.pageSize >= grid.data(grid.query).length);
         };
         pager.lastPage = function() {
             grid.pager.pageNum = grid.pager.numberOfPages - 1;
         };
         pager.disableLastPage = function() {
-            return pager.pageNum === (pager.numberOfPages - 1);
+            return !grid.data() || (pager.pageNum === (pager.numberOfPages - 1));
         };
         pager.pageSizeChanged = function() {
+            if (!grid.data()) {
+                return;
+            }
+            
             var totalItems = grid.data(grid.query).length;
             pager.numberOfPages = Math.ceil(totalItems / pager.pageSize) || 1;
             if (pager.pageNum > pager.numberOfPages) {
