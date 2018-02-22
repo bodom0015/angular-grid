@@ -1,0 +1,33 @@
+{
+  "name": "angular-grid",
+  "version": "0.0.1",
+  "description": "A primitive grid service for AngularJS with basic logic for filtering, sorting, paging, and selecting",
+  "main": "angular-grid.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bodom0015/angular-grid.git"
+  },
+  "keywords": [
+    "angular",
+    "grid",
+    "table",
+    "filter",
+    "sort",
+    "multiselect",
+    "paging",
+    "js",
+    "angularjs"
+  ],
+  "author": "Mike Lambert <bodom0015@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bodom0015/angular-grid/issues"
+  },
+  "homepage": "https://github.com/bodom0015/angular-grid#readme",
+  "dependencies": {
+    "angular": "^1.4.14"
+  }
+}
